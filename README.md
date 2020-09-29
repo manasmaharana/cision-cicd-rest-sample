@@ -6,8 +6,8 @@ The following was discovered as part of building this project:
 # Getting Started
 
 ### How to build and run  
-* Get the code base to your local - git clone https://github.com/manasmaharana/cision-cicd-rest-sample
-* Build - mvn clean install
+* Get the code base to your local - **git clone https://github.com/manasmaharana/cision-cicd-rest-sample **
+* Build - _mvn clean install_
 * Run through Spring Boot - mvn spring-boot:run
 
 ### Rest API Detail
