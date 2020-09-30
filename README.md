@@ -5,6 +5,9 @@ The following was discovered as part of building this project:
 
 # Getting Started
 
+### Prerequisites 
+* For Kafka API specification testing, make sure Zookeeper and Kafka server is up and running
+
 ### How to build and run  
 * Get the code base to your local - __git clone https://github.com/manasmaharana/cision-cicd-rest-sample__
 * Build - __mvn clean install__
@@ -16,4 +19,5 @@ The following was discovered as part of building this project:
 __Verified in postman__
 
 ### Reference Documentation
-* TODO - Reefer later
+* How to install and run Apache Kafka - https://docs.google.com/document/d/1g-81kznEAX1sFsX7oOahKubx9rGtbzJRoHhatKf_7i4/edit
+* TODO - Other references later
