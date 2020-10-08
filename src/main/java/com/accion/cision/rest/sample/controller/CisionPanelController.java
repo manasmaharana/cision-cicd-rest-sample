@@ -53,10 +53,14 @@ public class CisionPanelController {
 	}
 
 	@PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
-	public CisionPanelEntity loginCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity)
+	public ResponseEntity<?> loginCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity)
 			throws CisionPanelNotFoundException {
-		CisionPanelEntity loginUSer = cisionPanelService.loginUSer(cisionPanelEntity);
-		return loginUSer;
+		if ((cisionPanelEntity.getEmail() == null || "".equalsIgnoreCase(cisionPanelEntity.getEmail())) ||
+				(cisionPanelEntity.getPassword() == null || "".equalsIgnoreCase(cisionPanelEntity.getPassword()))) {
+			return new ResponseEntity<>("Please provide email or password", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		CisionPanelEntity entity = cisionPanelService.loginUSer(cisionPanelEntity);
+		return new ResponseEntity<>(entity, new HttpHeaders(), HttpStatus.OK);
 
 	}
 
