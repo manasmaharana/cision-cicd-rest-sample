@@ -8,17 +8,17 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootApplication(scanBasePackages={
-		"com.accion.cision.rest.sample"})
+@SpringBootApplication(scanBasePackages = { "com.accion.cision.rest.sample" })
 @EnableJpaRepositories("com.accion.cision.rest.sample.repository")
 @EnableAutoConfiguration()
-public class RestSampleApplication extends SpringBootServletInitializer{
+public class RestSampleApplication extends SpringBootServletInitializer {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RestSampleApplication.class, args);
-    }
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(RestSampleApplication.class);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(RestSampleApplication.class, args);
+	}
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(RestSampleApplication.class);
+	}
 }
