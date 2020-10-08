@@ -27,7 +27,6 @@ public class CisionPanelController {
 	@GetMapping(path = "/panels", produces = "application/json")
 	public ResponseEntity<List<CisionPanelEntity>> getCisionPanels() {
 
-		// return cisionPanelDAO.getAllCisionPanels();
 		List<CisionPanelEntity> list = cisionPanelService.getAllPanels();
 		return new ResponseEntity<List<CisionPanelEntity>>(list, new HttpHeaders(), HttpStatus.OK);
 	}
