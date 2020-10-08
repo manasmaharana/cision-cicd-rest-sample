@@ -2,11 +2,8 @@ package com.accion.cision.rest.sample.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.accion.cision.rest.sample.entity.CisionPanelEntity;
 import com.accion.cision.rest.sample.repository.CisionPanelRepository;
 
@@ -37,6 +34,11 @@ public class CisionPanelService {
                 (cisionPanelEntity.getEmail(), cisionPanelEntity.getPassword());
     }
 
+    /**
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
     public String updatePassword(String oldPassword, String newPassword) {
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return "";

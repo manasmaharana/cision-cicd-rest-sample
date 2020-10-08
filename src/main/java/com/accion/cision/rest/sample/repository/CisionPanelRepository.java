@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.accion.cision.rest.sample.entity.CisionPanelEntity;
 
-/**
- * @author al3211
- *
- */
+
 @Repository
 public interface CisionPanelRepository extends JpaRepository<CisionPanelEntity, Long> {
 
