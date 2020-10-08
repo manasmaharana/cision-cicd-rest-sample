@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name="resources", schema = "cision")
 public class CisionPanelEntity {
@@ -39,6 +38,23 @@ public class CisionPanelEntity {
 	@Column(name="userType")
 	private String userType;
 	
+	@Column(name="project_code")
+	private String projectCode;
+	
+	
+	
+	/**
+	 * @return the projectCode
+	 */
+	public String getProjectCode() {
+		return projectCode;
+	}
+	/**
+	 * @param projectCode the projectCode to set
+	 */
+	public void setProjectCode(String projectCode) {
+		this.projectCode = projectCode;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -93,6 +109,7 @@ public class CisionPanelEntity {
 	public void setUserType(String userType) {
 		this.userType = userType;
 	}
+	
 	
 	
 	
