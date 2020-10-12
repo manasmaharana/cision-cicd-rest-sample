@@ -3,8 +3,8 @@ package com.accion.cision.rest.sample.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.accion.cision.rest.sample.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.accion.cision.rest.sample.entity.CisionPanelEntity;
 import com.accion.cision.rest.sample.repository.CisionPanelRepository;
@@ -29,13 +29,13 @@ public class CisionPanelService {
      * @param cisionPanelEntity
      * @return
      */
-    public CisionPanelEntity loginUSer(CisionPanelEntity cisionPanelEntity) {
+    public CisionPanelEntity loginUser(CisionPanelEntity cisionPanelEntity) throws UserNotFoundException {
         CisionPanelEntity entity = panelRepository
                 .findUser(cisionPanelEntity.getEmail(), cisionPanelEntity.getPassword());
         if (entity != null) {
             return entity;
         } else {
-            throw new UsernameNotFoundException(cisionPanelEntity.getEmail());
+            throw new UserNotFoundException(cisionPanelEntity.getEmail());
         }
 
     }

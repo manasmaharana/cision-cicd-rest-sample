@@ -2,13 +2,13 @@ package com.accion.cision.rest.sample.controller;
 
 import com.accion.cision.rest.sample.entity.CisionPanelEntity;
 import com.accion.cision.rest.sample.exception.CisionPanelNotFoundException;
+import com.accion.cision.rest.sample.exception.UserNotFoundException;
 import com.accion.cision.rest.sample.repository.CisionPanelRepository;
 import com.accion.cision.rest.sample.service.CisionPanelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -64,23 +64,28 @@ public class CisionPanelController {
      * @param cisionPanelEntity
      * @return
      */
-    @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> loginCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity) {
+    @PostMapping(path = "/login",consumes = "application/json")
+    public ResponseEntity<?> loginCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity) throws UserNotFoundException {
         if ((cisionPanelEntity.getEmail() == null || "".equalsIgnoreCase(cisionPanelEntity.getEmail())) ||
                 (cisionPanelEntity.getPassword() == null || "".equalsIgnoreCase(cisionPanelEntity.getPassword()))) {
             return new ResponseEntity<>("Please provide email or password", new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
-        CisionPanelEntity entity = cisionPanelService.loginUSer(cisionPanelEntity);
+        CisionPanelEntity entity = cisionPanelService.loginUser(cisionPanelEntity);
         if (entity != null) {
             return new ResponseEntity<>(entity, new HttpHeaders(), HttpStatus.OK);
         } else {
-            throw new UsernameNotFoundException(cisionPanelEntity.getEmail());
+            throw new UserNotFoundException(cisionPanelEntity.getEmail());
         }
 
 
     }
 
-    @PostMapping(path = "/change-password", consumes = "application/json", produces = "application/json")
+    /**
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @PostMapping(path = "/change-password")
     public ResponseEntity<?> changeUserPassword(@RequestParam("password") String oldPassword, @RequestParam("newPassword") String newPassword) {
         cisionPanelService.updatePassword(oldPassword, newPassword);
         return new ResponseEntity<>("", new HttpHeaders(), HttpStatus.OK);
