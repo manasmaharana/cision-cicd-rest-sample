@@ -2,6 +2,7 @@ package com.accion.cision.rest.sample.controller;
 
 import com.accion.cision.rest.sample.entity.CisionPanelEntity;
 import com.accion.cision.rest.sample.exception.CisionPanelNotFoundException;
+import com.accion.cision.rest.sample.exception.UserNotFoundException;
 import com.accion.cision.rest.sample.repository.CisionPanelRepository;
 import com.accion.cision.rest.sample.service.CisionPanelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,49 +19,77 @@ import java.util.List;
 @RequestMapping(path = "/cision")
 public class CisionPanelController {
 
-	@Autowired
-	private CisionPanelRepository cisionPanelRepository;
+    @Autowired
+    private CisionPanelRepository cisionPanelRepository;
 
-	@Autowired
-	private CisionPanelService cisionPanelService;
+    @Autowired
+    private CisionPanelService cisionPanelService;
 
-	@GetMapping(path = "/panels", produces = "application/json")
-	public ResponseEntity<List<CisionPanelEntity>> getCisionPanels() {
+    /**
+     * @return
+     */
+    @GetMapping(path = "/panels", produces = "application/json")
+    public ResponseEntity<List<CisionPanelEntity>> getCisionPanels() {
+        List<CisionPanelEntity> list = cisionPanelService.getAllPanels();
+        return new ResponseEntity<List<CisionPanelEntity>>(list, new HttpHeaders(), HttpStatus.OK);
+    }
 
-		List<CisionPanelEntity> list = cisionPanelService.getAllPanels();
-		return new ResponseEntity<List<CisionPanelEntity>>(list, new HttpHeaders(), HttpStatus.OK);
-	}
+    /**
+     * @param cisionPanelEntity
+     * @return
+     */
+    @PostMapping(path = "/addPanel", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Object> addCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity) {
+        Integer id = cisionPanelRepository.findAll().size() + 1;
+        cisionPanelRepository.save(cisionPanelEntity);
+        URI path = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
+        return ResponseEntity.created(path).build();
+    }
 
-	@PostMapping(path = "/addPanel", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> addCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity) {
-		Integer id = cisionPanelRepository.findAll().size() + 1;
+    /**
+     * @param panelId
+     * @return
+     * @throws CisionPanelNotFoundException
+     */
+    @DeleteMapping(path = "/deletePanel/{id}", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Object> deleteCisionPanel(@PathVariable("id") long panelId)
+            throws CisionPanelNotFoundException {
+        CisionPanelEntity existingUser = cisionPanelRepository.findById(panelId)
+                .orElseThrow(() -> new CisionPanelNotFoundException(panelId));
+        cisionPanelRepository.delete(existingUser);
+        return ResponseEntity.ok().build();
+    }
 
-		cisionPanelRepository.save(cisionPanelEntity);
+    /**
+     * @param cisionPanelEntity
+     * @return
+     */
+    @PostMapping(path = "/login",consumes = "application/json")
+    public ResponseEntity<?> loginCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity) throws UserNotFoundException {
+        if ((cisionPanelEntity.getEmail() == null || "".equalsIgnoreCase(cisionPanelEntity.getEmail())) ||
+                (cisionPanelEntity.getPassword() == null || "".equalsIgnoreCase(cisionPanelEntity.getPassword()))) {
+            return new ResponseEntity<>("Please provide email or password", new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        }
+        CisionPanelEntity entity = cisionPanelService.loginUser(cisionPanelEntity);
+        if (entity != null) {
+            return new ResponseEntity<>(entity, new HttpHeaders(), HttpStatus.OK);
+        } else {
+            throw new UserNotFoundException(cisionPanelEntity.getEmail());
+        }
 
-		URI path = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
 
-		return ResponseEntity.created(path).build();
-	}
+    }
 
-	@DeleteMapping(path = "/deletePanel/{id}", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> deleteCisionPanel(@PathVariable("id") long panelId)
-			throws CisionPanelNotFoundException {
-		CisionPanelEntity existingUser = cisionPanelRepository.findById(panelId)
-				.orElseThrow(() -> new CisionPanelNotFoundException(panelId));
-		cisionPanelRepository.delete(existingUser);
-		return ResponseEntity.ok().build();
-	}
+    /**
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @PostMapping(path = "/change-password")
+    public ResponseEntity<?> changeUserPassword(@RequestParam("password") String oldPassword, @RequestParam("newPassword") String newPassword) {
+        cisionPanelService.updatePassword(oldPassword, newPassword);
+        return new ResponseEntity<>("", new HttpHeaders(), HttpStatus.OK);
+    }
 
-	@PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<?> loginCisionPanel(@RequestBody CisionPanelEntity cisionPanelEntity)
-			throws CisionPanelNotFoundException {
-		if ((cisionPanelEntity.getEmail() == null || "".equalsIgnoreCase(cisionPanelEntity.getEmail())) ||
-				(cisionPanelEntity.getPassword() == null || "".equalsIgnoreCase(cisionPanelEntity.getPassword()))) {
-			return new ResponseEntity<>("Please provide email or password", new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
-		CisionPanelEntity entity = cisionPanelService.loginUSer(cisionPanelEntity);
-		return new ResponseEntity<>(entity, new HttpHeaders(), HttpStatus.OK);
-
-	}
 
 }
