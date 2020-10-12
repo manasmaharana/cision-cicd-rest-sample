@@ -2,7 +2,9 @@ package com.accion.cision.rest.sample.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.accion.cision.rest.sample.entity.CisionPanelEntity;
 import com.accion.cision.rest.sample.repository.CisionPanelRepository;
@@ -15,8 +17,6 @@ public class CisionPanelService {
 
     public List<CisionPanelEntity> getAllPanels() {
         List<CisionPanelEntity> panelList = panelRepository.findAll();
-        System.out.println(panelList);
-
         if (panelList.size() > 0) {
             return panelList;
         } else {
@@ -30,8 +30,14 @@ public class CisionPanelService {
      * @return
      */
     public CisionPanelEntity loginUSer(CisionPanelEntity cisionPanelEntity) {
-        return panelRepository.findUser
-                (cisionPanelEntity.getEmail(), cisionPanelEntity.getPassword());
+        CisionPanelEntity entity = panelRepository
+                .findUser(cisionPanelEntity.getEmail(), cisionPanelEntity.getPassword());
+        if (entity != null) {
+            return entity;
+        } else {
+            throw new UsernameNotFoundException(cisionPanelEntity.getEmail());
+        }
+
     }
 
     /**
@@ -40,7 +46,7 @@ public class CisionPanelService {
      * @return
      */
     public String updatePassword(String oldPassword, String newPassword) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         return "";
     }
 }
